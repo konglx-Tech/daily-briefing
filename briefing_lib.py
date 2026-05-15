@@ -412,14 +412,15 @@ def fetch_monthly_focus() -> list[dict]:
     except Exception as e:
         print(f"[WARN] 经济日历失败: {e}")
 
-    # 2. 业绩预告（用当前季度报告期，如"20260630"）
+    # 2. 业绩预告
     try:
         import akshare as ak
-        # 计算当前季度末日期
         q = (today.month - 1) // 3 + 1
         quarter_end = f"{today.year}{q*3:02d}31"
-        df = ak.stock_yjyg_em(date=quarter_end)
-        if df is not None and not df.empty:
+        result = ak.stock_yjyg_em(date=quarter_end)
+        if result is not None:
+            df = result if hasattr(result, 'iterrows') else pd.DataFrame(result)
+            if not df.empty:
             # 筛出预增/预减幅度大的
             for _, row in df.head(30).iterrows():
                 chg_low = float(row.get("净利润变动幅度下限", 0) or 0)
