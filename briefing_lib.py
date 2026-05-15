@@ -412,10 +412,13 @@ def fetch_monthly_focus() -> list[dict]:
     except Exception as e:
         print(f"[WARN] 经济日历失败: {e}")
 
-    # 2. 业绩预告
+    # 2. 业绩预告（用当前季度报告期，如"20260630"）
     try:
         import akshare as ak
-        df = ak.stock_yjyg_em(date=today.strftime("%Y%m%d"))
+        # 计算当前季度末日期
+        q = (today.month - 1) // 3 + 1
+        quarter_end = f"{today.year}{q*3:02d}31"
+        df = ak.stock_yjyg_em(date=quarter_end)
         if df is not None and not df.empty:
             # 筛出预增/预减幅度大的
             for _, row in df.head(30).iterrows():
@@ -448,7 +451,8 @@ def fetch_monthly_focus() -> list[dict]:
                     "score": 5,
                 })
     except Exception as e:
-        print(f"[WARN] 机构推荐失败: {e}")
+        err = str(e)[:80]
+        print(f"[WARN] 机构推荐失败: {err}")
 
     # 4. 龙虎榜活跃股
     try:
