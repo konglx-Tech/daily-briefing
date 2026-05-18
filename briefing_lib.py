@@ -421,18 +421,18 @@ def fetch_monthly_focus() -> list[dict]:
         if result is not None:
             df = result if hasattr(result, 'iterrows') else pd.DataFrame(result)
             if not df.empty:
-            # 筛出预增/预减幅度大的
-            for _, row in df.head(30).iterrows():
-                chg_low = float(row.get("净利润变动幅度下限", 0) or 0)
-                chg_high = float(row.get("净利润变动幅度上限", 0) or 0)
-                if abs(chg_low) > 100 or abs(chg_high) > 100:
-                    forecast_type = str(row.get("预告类型", ""))
-                    focuses.append({
-                        "type": "业绩预告",
-                        "date": str(row.get("报告期", "")),
-                        "title": f"{row['股票简称']} {forecast_type} {chg_low:.0f}%~{chg_high:.0f}%",
-                        "score": 6 if "大增" in forecast_type or "预增" in forecast_type else 4,
-                    })
+                # 筛出预增/预减幅度大的
+                for _, row in df.head(30).iterrows():
+                    chg_low = float(row.get("净利润变动幅度下限", 0) or 0)
+                    chg_high = float(row.get("净利润变动幅度上限", 0) or 0)
+                    if abs(chg_low) > 100 or abs(chg_high) > 100:
+                        forecast_type = str(row.get("预告类型", ""))
+                        focuses.append({
+                            "type": "业绩预告",
+                            "date": str(row.get("报告期", "")),
+                            "title": f"{row['股票简称']} {forecast_type} {chg_low:.0f}%~{chg_high:.0f}%",
+                            "score": 6 if "大增" in forecast_type or "预增" in forecast_type else 4,
+                        })
     except Exception as e:
         print(f"[WARN] 业绩预告失败: {e}")
 
