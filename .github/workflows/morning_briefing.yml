@@ -1,9 +1,6 @@
 name: 每日开盘简报
 
 on:
-  schedule:
-    # 北京时间周一至周五 08:45 (UTC 00:45)
-    - cron: '45 0 * * 1-5'
   workflow_dispatch:
 
 jobs:
