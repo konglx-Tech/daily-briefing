@@ -1,9 +1,6 @@
 name: 午间快报
 
 on:
-  schedule:
-    # 北京时间周一至周五 11:45 (UTC 03:45)
-    - cron: '45 3 * * 1-5'
   workflow_dispatch:
 
 jobs:
